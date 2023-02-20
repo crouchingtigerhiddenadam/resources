@@ -9,6 +9,8 @@ struct Context {
 typedef struct Context Context_t;
 
 Context_t *init_context(char*);
+void free_context(Context_t*);
+
 void expression(Context_t*);
 void term(Context_t*);
 void factor(Context_t*);
@@ -19,17 +21,13 @@ int main()
 {
     Context_t *context = init_context("(1+2)*3-4");     // Create a parsing context.
     expression(context);                                // Evalute in RDP from expression.
-
     if (*context->error) {
         printf("error: %s\n", context->error);          // Output error.
-        free(context);                                  // Free memory.
-
+        free_context(context);                          // Destroy context.
         return EXIT_FAILURE;
     }
-
     printf("success: %i\n", context->result);           // Output result.
-    free(context);                                      // Free memory.
-
+    free_context(context);                              // Destroy context.
     return EXIT_SUCCESS;
 }
 
@@ -40,6 +38,11 @@ Context_t *init_context(char *expr)
     context->error = "";                                           // Set error to empty string (\0).
     context->result = 0;                                           // Set result to zero.
     return context;
+}
+
+void free_context(Context_t *context)
+{
+    free(context);    // Free memory.
 }
 
 void expression(Context_t *context)
