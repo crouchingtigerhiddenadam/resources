@@ -27,7 +27,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    printf("success: result %i\n", context->result);    // Output result.
+    printf("success: %i\n", context->result);           // Output result.
     free(context);                                      // Free memory.
 
     return EXIT_SUCCESS;
@@ -105,12 +105,12 @@ void factor(Context_t *context)
         expression(context);                                    // Get expression.
         whitespace(context);                                    // Skip whitespace.
         if (*context->cp != ')') {                              // Check non-existence of close paranthesis
-            context->error = "SyntaxError: closing paranthesis was expected.";
+            context->error = "Closing paranthesis was expected.";
         }
         ++context->cp;                                          // Move to next character.
     }
     else {
-        context->error = "SyntaxError: number was expected.";
+        context->error = "Number was expected.";
     }
 }
 
