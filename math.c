@@ -16,14 +16,22 @@ void factor(Context_t*);
 void whitespace(Context_t*);
 void error(Context_t*);
 
-void main()
+int main()
 {
     Context_t *context = init_context("(1+2)*3-4");     // Create a parsing context.
-
     expression(context);                                // Evalute in RDP from expression.
-    printf("result: %i\n", context->result);            // Print result to screen.
 
+    if (*context->error) {
+        printf("error: %s\n", context->error);          // Output error.
+        free(context);                                  // Free memory.
+
+        return EXIT_FAILURE;
+    }
+
+    printf("success: result %i\n", context->result);    // Output result.
     free(context);                                      // Free memory.
+
+    return EXIT_SUCCESS;
 }
 
 Context_t *init_context(char *expr)
@@ -99,13 +107,11 @@ void factor(Context_t *context)
         whitespace(context);                                    // Skip whitespace.
         if (*context->cp != ')') {                              // Check non-existence of close paranthesis
             context->error = "SyntaxError: closing paranthesis was expected.";
-            error(context);
         }
         ++context->cp;                                          // Move to next character.
     }
     else {
         context->error = "SyntaxError: number was expected.";
-        error(context);
     }
 }
 
@@ -114,10 +120,4 @@ void whitespace(Context_t *context)
     while (*context->cp == ' ') {    // Check for spaces.
         ++context->cp;               // Move to next character.
     }
-}
-
-void error(Context_t *context)
-{
-    printf("%s\n", context->error);
-    exit(-1);
 }
